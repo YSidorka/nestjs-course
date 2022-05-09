@@ -1,0 +1,22 @@
+{
+  "name": "scratch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier -w ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^8.4.4",
+    "@nestjs/core": "^8.4.4",
+    "@nestjs/platform-express": "^8.4.4",
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.33"
+  }
+}
