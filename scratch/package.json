@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npx ts-node-dev src/main.ts",
     "prettier": "prettier -w ."
   },
   "keywords": [],
