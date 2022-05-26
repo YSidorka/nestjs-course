@@ -4,18 +4,18 @@ import {
   Delete,
   Get,
   NotFoundException,
-  UnauthorizedException,
   Param,
   Patch,
   Post,
-  Query
+  Query,
+  Session
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -27,14 +27,13 @@ export class UsersController {
 
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto) {
-    const result = await this.authService.signup(body);
+    const result = await this.authService.signup(body.email, body.password);
     return result;
   }
 
   @Post('/signin')
   async loginUser(@Body() body: CreateUserDto) {
-    const result = await this.usersService.findOne(body);
-    if (!result) throw new UnauthorizedException('No access rights');
+    const result = await this.authService.signin(body.email, body.password);
     return result;
   }
 
