@@ -9,7 +9,7 @@ import {
   Post,
   Query,
   Session,
-  UseInterceptors
+  UseGuards
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -18,12 +18,11 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from '../auth/auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { UserEntity } from './user.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
 @Serialize(UserDto)
-@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -49,14 +48,8 @@ export class UsersController {
     session.id = null;
   }
 
-  /*@Get('/user')
-  async getCurrentUser(@Session() session: any) {
-    const user = await this.usersService.findOne({ id: session.id });
-    if (!user) throw new NotFoundException('User not found');
-    return user;
-  }*/
-
   @Get('/user')
+  @UseGuards(AuthGuard)
   async getCurrentUser(@CurrentUser() user: UserEntity) {
     if (!user) throw new NotFoundException('User not found');
     return user;
@@ -70,6 +63,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAllUsers(@Query('email') email: string) {
     const result = await this.usersService.find({ email });
     return result;
