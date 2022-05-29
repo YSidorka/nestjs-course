@@ -8,7 +8,8 @@ import {
   Patch,
   Post,
   Query,
-  Session
+  Session,
+  UseInterceptors
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -16,9 +17,13 @@ import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from '../auth/auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { UserEntity } from './user.entity';
 
 @Controller('auth')
 @Serialize(UserDto)
+@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -26,15 +31,35 @@ export class UsersController {
   ) {}
 
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto) {
-    const result = await this.authService.signup(body.email, body.password);
-    return result;
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signup(body.email, body.password);
+    session.id = user.id;
+    return user;
   }
 
-  @Post('/signin')
-  async loginUser(@Body() body: CreateUserDto) {
-    const result = await this.authService.signin(body.email, body.password);
-    return result;
+  @Post('/login')
+  async loginUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signin(body.email, body.password);
+    session.id = user.id;
+    return user;
+  }
+
+  @Post('/logout')
+  async logoutUser(@Session() session: any) {
+    session.id = null;
+  }
+
+  /*@Get('/user')
+  async getCurrentUser(@Session() session: any) {
+    const user = await this.usersService.findOne({ id: session.id });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }*/
+
+  @Get('/user')
+  async getCurrentUser(@CurrentUser() user: UserEntity) {
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   @Get('/:id')
