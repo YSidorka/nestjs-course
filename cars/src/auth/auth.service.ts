@@ -41,14 +41,9 @@ export class AuthService {
   }
 
   async isValidPassword(password: string, userPassword: string) {
-    try {
-      const [salt] = userPassword.split('.');
-      const currentHash = await this.setHash(password, salt);
-      return currentHash === userPassword;
-    } catch (err) {
-      console.log('isValidPassword:', err.message);
-      return false;
-    }
+    const [salt] = userPassword.split('.');
+    const currentHash = await this.setHash(password, salt);
+    return currentHash === userPassword;
   }
 
   setSalt() {
