@@ -46,15 +46,15 @@ describe('UsersController', () => {
             password: '11111'
           });
         return Promise.resolve(<UserEntity>{ id, email });
-      },
+      }
 
-      async update(id: number, options: Partial<UserEntity>) {
+      /* async update(id: number, options: Partial<UserEntity>) {
         return Promise.resolve(null);
       },
 
       async remove(id: number) {
         return Promise.resolve(null);
-      }
+      }*/
     };
 
     const module: TestingModule = await Test.createTestingModule({
