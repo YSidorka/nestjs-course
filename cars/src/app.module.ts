@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './users/user.entity';
 import { ReportEntity } from './reports/report.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+const cookieSession = require('cookie-session'); // eslint-disable-line
 
 @Module({
   imports: [
@@ -34,7 +35,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ]
 })
 export class AppModule {
-  constructor(private envConfig: ConfigService) {
-    // console.log('envConfig:', this.envConfig.get('ACCOUNT'));
+  constructor(private envConfig: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const account = this.envConfig.get('ACCOUNT');
+
+    consumer.apply(cookieSession({ keys: [account] })).forRoutes('*');
   }
 }
