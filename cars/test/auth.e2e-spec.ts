@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { setupApp } from '../src/setup-app';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -13,7 +12,6 @@ describe('Authentication (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    await setupApp(app);
     await app.init();
   });
 
