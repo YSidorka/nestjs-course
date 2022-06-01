@@ -27,6 +27,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 })
 export class AppModule {
   constructor(private envConfig: ConfigService) {
-    console.log('envConfig:', this.envConfig.get('ACCOUNT'));
+    // console.log('envConfig:', this.envConfig.get('ACCOUNT'));
   }
 }

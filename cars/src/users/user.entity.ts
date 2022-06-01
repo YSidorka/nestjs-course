@@ -20,16 +20,16 @@ export class UserEntity {
 
   @AfterInsert()
   logInsert() {
-    console.log(`Inserted ${this.id}`);
+    console.log(`Inserted id:`, this.id);
   }
 
   @AfterUpdate()
   logUpdate() {
-    console.log(`Updated ${this.id}`);
+    console.log(`Updated id:`, this.id);
   }
 
   @BeforeRemove()
   logRemove() {
-    console.log(`Removed ${this.id}`);
+    console.log(`Removed id:`, this.id);
   }
 }

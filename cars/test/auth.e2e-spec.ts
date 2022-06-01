@@ -1,0 +1,37 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from '../src/app.module';
+import { setupApp } from '../src/setup-app';
+
+describe('Authentication (e2e)', () => {
+  let app: INestApplication;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule]
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await setupApp(app);
+    await app.init();
+  });
+
+  it('handles a signup request', () => {
+    const EMAIL = `${Date.now()}@test.com`;
+
+    return request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({
+        email: EMAIL,
+        password: 'admin'
+      })
+      .expect(201)
+      .then((res) => {
+        const { id, email, password } = res.body;
+        expect(id).toBeDefined();
+        expect(email).toEqual(EMAIL);
+        expect(password).not.toBeDefined();
+      });
+  });
+});
