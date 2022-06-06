@@ -16,7 +16,7 @@ export class UsersService {
 
   async findOne(options) {
     try {
-      const user = await this.repo.findOne(options);
+      const user = await this.repo.findOne({ where: options });
       return user;
     } catch (err) {
       return null;

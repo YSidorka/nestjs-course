@@ -13,13 +13,21 @@ const cookieSession = require('cookie-session'); // eslint-disable-line
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}`
+        : `.env.prod`
     }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [UserEntity, ReportEntity],
-      synchronize: true
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get('DBNAME'),
+          entities: [UserEntity, ReportEntity],
+          synchronize: true
+        };
+      }
     }),
     UsersModule,
     ReportsModule
@@ -39,7 +47,6 @@ export class AppModule {
 
   configure(consumer: MiddlewareConsumer) {
     const account = this.envConfig.get('ACCOUNT');
-
     consumer.apply(cookieSession({ keys: [account] })).forRoutes('*');
   }
 }

@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const envConfig = app.get(ConfigService);
-  const port = envConfig.get('PORT');
+  const port = envConfig.get('PORT') || 3000;
   console.log('port:', port);
   app.getHttpAdapter().getInstance().disable('x-powered-by');
 
