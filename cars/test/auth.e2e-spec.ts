@@ -22,9 +22,9 @@ describe('Authentication (e2e)', () => {
     if (connection) await connection.close();
   });
 
-  it('handles a signup request', () => {
-    const EMAIL = `test@test.com`;
+  const EMAIL = `test@test.com`;
 
+  it('handles a signup request', () => {
     return request(app.getHttpServer())
       .post('/auth/signup')
       .send({ email: EMAIL, password: 'admin' })
@@ -39,8 +39,6 @@ describe('Authentication (e2e)', () => {
   });
 
   it('get user after signup process', async () => {
-    const EMAIL = `test@test.com`;
-
     const res = await request(app.getHttpServer())
       .post('/auth/signup')
       .send({ email: EMAIL, password: 'admin' })

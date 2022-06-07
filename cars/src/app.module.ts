@@ -46,6 +46,9 @@ export class AppModule {
   constructor(private envConfig: ConfigService) {}
 
   configure(consumer: MiddlewareConsumer) {
+    // console.log('ENV:', process.env.NODE_ENV);
+    // console.log('ACCOUNT:', process.env.ACCOUNT);
+
     const account = this.envConfig.get('ACCOUNT');
     consumer.apply(cookieSession({ keys: [account] })).forRoutes('*');
   }
